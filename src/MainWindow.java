@@ -1,5 +1,6 @@
-
+import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,7 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
         browseFromPathButton = new javax.swing.JButton();
         browseToPathButton = new javax.swing.JButton();
         compressButton = new javax.swing.JButton();
-        calcelButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -65,7 +66,12 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        calcelButton.setText("Cancelar");
+        cancelButton.setText("Cancelar");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -81,7 +87,7 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(pathTo))
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(calcelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                            .addComponent(cancelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, Short.MAX_VALUE)
                             .addComponent(browseToPathButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(browseFromPathButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
@@ -102,12 +108,15 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(browseToPathButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(calcelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(32, 32, 32)
                 .addComponent(compressButton)
                 .addGap(25, 25, 25))
         );
+
+        cancelButton.setVisible(false);
+        progressBar.setVisible(false);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -127,10 +136,56 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_browseToPathButtonActionPerformed
 
     private void compressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compressButtonActionPerformed
-        // TODO: check if paths are not the same
-        cf.execute();
+        if (!textFieldIsEmpty() && !directoriesAreEquals()) {            
+            cancelButton.setVisible(true);
+            progressBar.setVisible(true);
+            cf.execute();
+        }
     }//GEN-LAST:event_compressButtonActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        cf.cancel(true);
+        resetComponents();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+    
+    private boolean textFieldIsEmpty() {
+        if (pathFrom.getText().equals("") || pathTo.getText().equals("")) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Debe elegir dos directorios (origen y destino)",
+                    "Información",
+                    JOptionPane.WARNING_MESSAGE);
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean directoriesAreEquals() {
+        if (pathFrom.getText().equals(pathTo.getText())) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Los directorios no pueden ser iguales",
+                    "Información",
+                    JOptionPane.WARNING_MESSAGE);
+            return true;
+        }
+        return false;
+    }
+    
+    protected static void updateProgess(int progress) {
+        progressBar.setValue(progress);
+    }
+    
+    protected static void resetComponents() {
+        cf = new CompressFile();
+        if (!pathFrom.getText().equals(""))
+            cf.setDirectoryFrom(new File(pathFrom.getText()));
+        if (!pathTo.getText().equals(""))
+            cf.setDirectoryTo(new File(pathTo.getText()));
+        cancelButton.setVisible(false);
+        progressBar.setVisible(false);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -159,22 +214,20 @@ public class MainWindow extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MainWindow().setVisible(true);
         });
     }
 
     private final JFileChooser fc = new JFileChooser();
-    private final CompressFile cf = new CompressFile();
+    private static CompressFile cf = new CompressFile();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseFromPathButton;
     private javax.swing.JButton browseToPathButton;
-    private javax.swing.JButton calcelButton;
+    private static javax.swing.JButton cancelButton;
     private javax.swing.JButton compressButton;
-    private javax.swing.JTextField pathFrom;
-    private javax.swing.JTextField pathTo;
-    private javax.swing.JProgressBar progressBar;
+    private static javax.swing.JTextField pathFrom;
+    private static javax.swing.JTextField pathTo;
+    private static javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
 }
