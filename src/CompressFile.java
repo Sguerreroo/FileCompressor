@@ -8,12 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 public class CompressFile extends SwingWorker<Void, Integer> {
     
     private File directoryFrom, directoryTo;
-    
+    private MainWindow window;
     @Override
     protected Void doInBackground() {
         List<String> files = new ArrayList<>();
@@ -24,9 +25,14 @@ public class CompressFile extends SwingWorker<Void, Integer> {
 
     @Override
     protected void process(List<Integer> list) {
-        super.process(list); //To change body of generated methods, choose Tools | Templates.
+        
+        System.out.println(this.getProgress());
+        window.setProgress(this.getProgress());//To change body of generated methods, choose Tools | Templates.
     }
 
+    protected void setWindow(MainWindow w) {
+        this.window = w;
+    }
     protected void setDirectoryFrom(File directoryFrom) {
         this.directoryFrom = directoryFrom;
     }
@@ -46,12 +52,16 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             // Objeto para referenciar a los archivos que queremos comprimir
             BufferedInputStream origin = null;
             // Objeto para referenciar el archivo zip de salida
-            FileOutputStream dest = new FileOutputStream(directoryTo.getAbsolutePath() + directoryFrom.getName() + ".zip");
+            FileOutputStream dest = new FileOutputStream(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             // Buffer de transferencia para mandar datos a comprimir
             byte[] data = new byte[BUFFER_SIZE];
             Iterator i = files.iterator();
-            while(i.hasNext()) {
+            int num = 0;
+            setProgress(100 * num / files.size());
+            publish();
+            while(i.hasNext() && !isCancelled()) {
+                
                 String filename = (String)i.next();
                 FileInputStream fi = new FileInputStream(filename);
                 origin = new BufferedInputStream(fi, BUFFER_SIZE);
@@ -64,6 +74,9 @@ public class CompressFile extends SwingWorker<Void, Integer> {
                     out.write(data, 0, count);
                 }
                 // Cerramos el archivo origen, ya enviado a comprimir
+                num ++;
+                setProgress(100 * num / files.size());
+                publish();
                 origin.close();
             }
             // Cerramos el archivo zip
@@ -73,6 +86,20 @@ public class CompressFile extends SwingWorker<Void, Integer> {
         {
             e.printStackTrace();
         }
-        System.out.println("Bye");
+       
     }
+    @Override
+    protected void done() {
+        if(this.isCancelled()==false){
+            JOptionPane.showMessageDialog(null, "Archvo comprimido correctamente", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, "Se ha cancelado", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        window.setProgress(0);
+        window.reInitialiceCompressFile();
+        
+    }
+
+  
 }

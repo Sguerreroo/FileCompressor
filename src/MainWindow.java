@@ -1,5 +1,8 @@
 
+import static java.awt.image.ImageObserver.HEIGHT;
+import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,6 +22,9 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         initComponents();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        cf.setWindow(this);
+        calcelButton.setVisible(false);
+        
     }
 
     /**
@@ -66,6 +72,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         calcelButton.setText("Cancelar");
+        calcelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calcelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,6 +123,10 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    protected void setProgress(int progress){
+        progressBar.setValue(progress);
+        progressBar.repaint();
+    }
     private void browseFromPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseFromPathButtonActionPerformed
         if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             pathFrom.setText(fc.getSelectedFile().getAbsolutePath());
@@ -126,10 +141,45 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_browseToPathButtonActionPerformed
 
+    
+    private boolean checkTextField(){
+        if(pathFrom.getText().equals("") || pathTo.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "Elija un directorio", "Information", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+            
+        if(pathFrom.getText().equals(pathTo.getText())){
+            JOptionPane.showMessageDialog(null, "Los directorios no puedenn ser iguales", "Information", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        return true;
+    }
     private void compressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compressButtonActionPerformed
-        // TODO: check if paths are not the same
-        cf.execute();
+        if(checkTextField()){
+            cf.execute();
+            compressButton.setVisible(false);
+            calcelButton.setVisible(true);
+        }
+        
     }//GEN-LAST:event_compressButtonActionPerformed
+    
+    protected void reInitialiceCompressFile(){
+        cf =  new CompressFile();
+        if(!pathFrom.getText().equals("")){
+            cf.setDirectoryFrom(new File(pathFrom.getText()));
+        }
+        if(!pathTo.getText().equals("")){
+            cf.setDirectoryTo(new File(pathTo.getText()));
+        }
+        calcelButton.setVisible(false);
+        compressButton.setVisible(true);
+        cf.setWindow(this);
+    }
+    private void calcelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcelButtonActionPerformed
+        cf.cancel(true);
+        reInitialiceCompressFile();
+        calcelButton.setVisible(false);
+    }//GEN-LAST:event_calcelButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -167,7 +217,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private final JFileChooser fc = new JFileChooser();
-    private final CompressFile cf = new CompressFile();
+    private CompressFile cf = new CompressFile();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseFromPathButton;
     private javax.swing.JButton browseToPathButton;
