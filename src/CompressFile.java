@@ -79,7 +79,7 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             publish(this.getProgress());
             
             Iterator i = files.iterator();
-            while(i.hasNext()) {
+            while(i.hasNext() && !isCancelled()) {
                 final String filename = (String)i.next();
                 System.out.println(filename);
                 FileInputStream fi = new FileInputStream(filename);
@@ -89,9 +89,8 @@ public class CompressFile extends SwingWorker<Void, Integer> {
                 out.putNextEntry(entry);
                 // Leemos datos desde el archivo origen y los mandamos al archivo destino
                 int count;
-                while((count = origin.read(data, 0, BUFFER_SIZE)) != -1) {
+                while((count = origin.read(data, 0, BUFFER_SIZE)) != -1)
                     out.write(data, 0, count);
-                }
                 
                 numberOfCompressedFiles++;
                 this.setProgress(100 * numberOfCompressedFiles / totalFiles);
