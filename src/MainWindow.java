@@ -1,8 +1,8 @@
-
-import static java.awt.image.ImageObserver.HEIGHT;
+import java.awt.Color;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,7 +24,8 @@ public class MainWindow extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         cf.setWindow(this);
         calcelButton.setVisible(false);
-        
+        progressBar.setVisible(false);
+        UIManager.put( "nimbusOrange", new Color( 38, 139, 210 ) );
     }
 
     /**
@@ -43,6 +44,9 @@ public class MainWindow extends javax.swing.JFrame {
         compressButton = new javax.swing.JButton();
         calcelButton = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
+        chooseFrom = new javax.swing.JLabel();
+        chooseTo = new javax.swing.JLabel();
+        authorNames = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,6 +82,12 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        chooseFrom.setText("Elija la carpeta que desea comprimir:");
+
+        chooseTo.setText("Elija la carpeta destino:");
+
+        authorNames.setText("Nelson González Machín, Samuel Guerra Marrero");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,28 +96,41 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pathFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                            .addComponent(pathTo))
-                        .addGap(36, 36, 36)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(calcelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-                            .addComponent(browseToPathButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(browseFromPathButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(203, 203, 203)
-                        .addComponent(compressButton)))
-                .addContainerGap(49, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chooseFrom)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(pathFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                                    .addComponent(pathTo))
+                                .addGap(36, 36, 36)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(calcelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 79, Short.MAX_VALUE)
+                                    .addComponent(browseToPathButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(browseFromPathButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(chooseTo))
+                        .addGap(0, 43, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(authorNames)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(187, 187, 187)
+                .addComponent(compressButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
+                .addGap(26, 26, 26)
+                .addComponent(chooseFrom)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pathFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseFromPathButton))
-                .addGap(34, 34, 34)
+                .addGap(12, 12, 12)
+                .addComponent(chooseTo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pathTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseToPathButton))
@@ -115,9 +138,11 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(calcelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(32, 32, 32)
+                .addGap(17, 17, 17)
                 .addComponent(compressButton)
-                .addGap(25, 25, 25))
+                .addGap(18, 18, 18)
+                .addComponent(authorNames)
+                .addContainerGap())
         );
 
         pack();
@@ -159,6 +184,7 @@ public class MainWindow extends javax.swing.JFrame {
             cf.execute();
             compressButton.setVisible(false);
             calcelButton.setVisible(true);
+            progressBar.setVisible(true);
         }
         
     }//GEN-LAST:event_compressButtonActionPerformed
@@ -173,6 +199,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
         calcelButton.setVisible(false);
         compressButton.setVisible(true);
+        progressBar.setVisible(false);
         cf.setWindow(this);
     }
     private void calcelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcelButtonActionPerformed
@@ -219,9 +246,12 @@ public class MainWindow extends javax.swing.JFrame {
     private final JFileChooser fc = new JFileChooser();
     private CompressFile cf = new CompressFile();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel authorNames;
     private javax.swing.JButton browseFromPathButton;
     private javax.swing.JButton browseToPathButton;
     private javax.swing.JButton calcelButton;
+    private javax.swing.JLabel chooseFrom;
+    private javax.swing.JLabel chooseTo;
     private javax.swing.JButton compressButton;
     private javax.swing.JTextField pathFrom;
     private javax.swing.JTextField pathTo;

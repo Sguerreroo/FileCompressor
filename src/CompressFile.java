@@ -86,7 +86,8 @@ public class CompressFile extends SwingWorker<Void, Integer> {
         {
             e.printStackTrace();
         }
-       
+        if (this.isCancelled())
+            new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip").delete();
     }
     @Override
     protected void done() {
