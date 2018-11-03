@@ -114,40 +114,22 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             JOptionPane.showMessageDialog(null, "Archivo comprimido correctamente", "Information", JOptionPane.INFORMATION_MESSAGE);
         else {
             JOptionPane.showMessageDialog(null, "Se ha cancelado", "Information", JOptionPane.INFORMATION_MESSAGE);
-            System.out.println(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
             File zip = new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
-            //deleteFolder(zip);
+            
             if (zip.exists()) {
-                System.out.println("existo");
-                if (zip.delete()) {
-                    System.out.println("me he borrado");
-                } else 
-                    System.out.println("no me he borrado");
-            } else 
-                System.out.println("no existo");
-//            deleteFolder(zip);
+                
+                zip.delete();
+                    
+            }
+//            
         }
         window.setProgress(0);
         window.reInitialiceCompressFile();
     }
     
     
-    private void deleteFolder(File folder) {
-        File[] files = folder.listFiles();
-        if(files!=null) {
-            System.out.println("Entro en el if");
-            for(File f: files)
-                if (f.isDirectory()) deleteFolder(f);
-                else f.delete();
-        } else {
-            System.out.println("no entro en el if");
-        }
-        if (folder.delete()) {
-            System.out.println("me borro");
-        } else {
-            System.out.println("no me borro");
-        }
-    }
+    
+    
 
   
 }
