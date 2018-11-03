@@ -116,7 +116,7 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             JOptionPane.showMessageDialog(null, "Se ha cancelado", "Information", JOptionPane.INFORMATION_MESSAGE);
             System.out.println(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
             File zip = new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
-            deleteFolder(zip);
+            //deleteFolder(zip);
             if (zip.exists()) {
                 System.out.println("existo");
                 if (zip.delete()) {
