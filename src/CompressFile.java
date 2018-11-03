@@ -48,13 +48,14 @@ public class CompressFile extends SwingWorker<Void, Integer> {
     }
 
     private void compressFiles(List<String> files) {
+        ZipOutputStream out = null;
         try {
             int BUFFER_SIZE = 1024;
             // Objeto para referenciar a los archivos que queremos comprimir
             BufferedInputStream origin = null;
             // Objeto para referenciar el archivo zip de salida
             FileOutputStream dest = new FileOutputStream(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+            out = new ZipOutputStream(new BufferedOutputStream(dest));
             // Buffer de transferencia para mandar datos a comprimir
             byte[] data = new byte[BUFFER_SIZE];
             Iterator i = files.iterator();
@@ -90,12 +91,22 @@ public class CompressFile extends SwingWorker<Void, Integer> {
                     "Aviso",
                     JOptionPane.WARNING_MESSAGE);
             this.cancel(true);
+            
         }
         catch( Exception e )
         {
             System.out.println("paso por aqui");
             e.printStackTrace();
+            
         }
+        try{
+            if(out != null){
+                out.close();
+            }
+        }catch(Exception e){
+            System.out.println("Fichero no se puede cerrar");
+        }
+        
     }
     @Override
     protected void done() {
@@ -105,6 +116,7 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             JOptionPane.showMessageDialog(null, "Se ha cancelado", "Information", JOptionPane.INFORMATION_MESSAGE);
             System.out.println(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
             File zip = new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
+            deleteFolder(zip);
             if (zip.exists()) {
                 System.out.println("existo");
                 if (zip.delete()) {
