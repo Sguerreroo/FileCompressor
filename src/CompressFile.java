@@ -15,6 +15,7 @@ public class CompressFile extends SwingWorker<Void, Integer> {
     
     private File directoryFrom, directoryTo;
     private MainWindow window;
+    
     @Override
     protected Void doInBackground() {
         List<String> files = new ArrayList<>();
@@ -25,9 +26,7 @@ public class CompressFile extends SwingWorker<Void, Integer> {
 
     @Override
     protected void process(List<Integer> list) {
-        
-        System.out.println(this.getProgress());
-        window.setProgress(this.getProgress());//To change body of generated methods, choose Tools | Templates.
+        window.setProgress(this.getProgress());
     }
 
     protected void setWindow(MainWindow w) {
@@ -82,19 +81,26 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             // Cerramos el archivo zip
             out.close();
         }
+        catch (java.io.FileNotFoundException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "La carpeta que desea comprimir no puede tener subcarpetas.",
+                    "Información",
+                    JOptionPane.WARNING_MESSAGE);
+            this.cancel(true);
+        }
         catch( Exception e )
         {
             e.printStackTrace();
         }
-        if (this.isCancelled())
-            new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip").delete();
     }
     @Override
     protected void done() {
-        if(this.isCancelled()==false){
+        if (!this.isCancelled())
             JOptionPane.showMessageDialog(null, "Archvo comprimido correctamente", "Information", JOptionPane.INFORMATION_MESSAGE);
-        }else{
+        else {
             JOptionPane.showMessageDialog(null, "Se ha cancelado", "Information", JOptionPane.INFORMATION_MESSAGE);
+            new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip").delete();
         }
         
         window.setProgress(0);
