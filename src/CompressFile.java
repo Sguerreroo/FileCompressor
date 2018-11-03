@@ -3,6 +3,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,27 +87,54 @@ public class CompressFile extends SwingWorker<Void, Integer> {
             JOptionPane.showMessageDialog(
                     null,
                     "La carpeta que desea comprimir no puede tener subcarpetas.",
-                    "Información",
+                    "Aviso",
                     JOptionPane.WARNING_MESSAGE);
             this.cancel(true);
         }
         catch( Exception e )
         {
+            System.out.println("paso por aqui");
             e.printStackTrace();
         }
     }
     @Override
     protected void done() {
         if (!this.isCancelled())
-            JOptionPane.showMessageDialog(null, "Archvo comprimido correctamente", "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Archivo comprimido correctamente", "Information", JOptionPane.INFORMATION_MESSAGE);
         else {
             JOptionPane.showMessageDialog(null, "Se ha cancelado", "Information", JOptionPane.INFORMATION_MESSAGE);
-            new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip").delete();
+            System.out.println(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
+            File zip = new File(directoryTo.getAbsolutePath() + "\\"+  directoryFrom.getName() + ".zip");
+            if (zip.exists()) {
+                System.out.println("existo");
+                if (zip.delete()) {
+                    System.out.println("me he borrado");
+                } else 
+                    System.out.println("no me he borrado");
+            } else 
+                System.out.println("no existo");
+//            deleteFolder(zip);
         }
-        
         window.setProgress(0);
         window.reInitialiceCompressFile();
-        
+    }
+    
+    
+    private void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if(files!=null) {
+            System.out.println("Entro en el if");
+            for(File f: files)
+                if (f.isDirectory()) deleteFolder(f);
+                else f.delete();
+        } else {
+            System.out.println("no entro en el if");
+        }
+        if (folder.delete()) {
+            System.out.println("me borro");
+        } else {
+            System.out.println("no me borro");
+        }
     }
 
   

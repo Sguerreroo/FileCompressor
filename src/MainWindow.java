@@ -49,6 +49,7 @@ public class MainWindow extends javax.swing.JFrame {
         authorNames = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         pathTo.setEnabled(false);
 
@@ -154,15 +155,29 @@ public class MainWindow extends javax.swing.JFrame {
     }
     private void browseFromPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseFromPathButtonActionPerformed
         if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            pathFrom.setText(fc.getSelectedFile().getAbsolutePath());
-            cf.setDirectoryFrom(fc.getSelectedFile());
+            if (fc.getSelectedFile().exists()) {
+                pathFrom.setText(fc.getSelectedFile().getAbsolutePath());
+                cf.setDirectoryFrom(fc.getSelectedFile());
+            } else
+                JOptionPane.showMessageDialog(
+                        null,
+                        "La carpeta que ha elegido no existe",
+                        "Aviso",
+                        JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_browseFromPathButtonActionPerformed
 
     private void browseToPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseToPathButtonActionPerformed
         if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            pathTo.setText(fc.getSelectedFile().getAbsolutePath());
-            cf.setDirectoryTo(fc.getSelectedFile());
+            if (fc.getSelectedFile().exists()) {
+                pathTo.setText(fc.getSelectedFile().getAbsolutePath());
+                cf.setDirectoryTo(fc.getSelectedFile());
+            } else
+                JOptionPane.showMessageDialog(
+                        null,
+                        "La carpeta que ha elegido no existe",
+                        "Aviso",
+                        JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_browseToPathButtonActionPerformed
 
@@ -174,7 +189,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
             
         if(pathFrom.getText().equals(pathTo.getText())){
-            JOptionPane.showMessageDialog(null, "Los directorios no puedenn ser iguales", "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Los directorios no pueden ser iguales", "Information", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
         return true;
@@ -204,7 +219,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
     private void calcelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcelButtonActionPerformed
         cf.cancel(true);
-        reInitialiceCompressFile();
+//        reInitialiceCompressFile();
         calcelButton.setVisible(false);
     }//GEN-LAST:event_calcelButtonActionPerformed
 
